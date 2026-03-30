@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-$x-i3t*%ub4oe9j)$5!ycm=9zj6de_kwqtd=ijo5+*361!)%8d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
 
 
 # Application definition
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'foatball.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.parse(
-        os.environ.get("DATABASE_URL")
+        os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3")
     )
 }
 
