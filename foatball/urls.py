@@ -22,7 +22,7 @@ def home(request):
     return HttpResponse("Welcome to Foatball API")
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('/', home, name='home'),
     path('admin/', admin.site.urls),
     path('api/',include('details.urls')),
     path('auth/api/',include('userauth.urls')),
