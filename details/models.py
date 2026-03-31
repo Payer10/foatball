@@ -27,7 +27,7 @@ class Player(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.player.name
+        return self.short_name
 
 
 # 2️⃣ Match Model (Schedule / Results)
