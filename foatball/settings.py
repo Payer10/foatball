@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-$x-i3t*%ub4oe9j)$5!ycm=9zj6de_kwqtd=ijo5+*361!)%8d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', '.now.sh']
 
 
 # Application definition
@@ -79,9 +79,14 @@ WSGI_APPLICATION = 'foatball.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(
-        os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3")
-    )
+    'default':{
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'MHiDNvgMdEveapoSaAdAEmnJmtlecHNj',
+        'HOST': 'crossover.proxy.rlwy.net',
+        'PORT': '45217',
+    }
 }
 
 AUTH_USER_MODEL = 'userauth.User'
