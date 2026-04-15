@@ -56,5 +56,4 @@ class LoginView(APIView):
 class UserDetailView(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializerCURD
-    http_method_names = ['get', 'put', 'patch', 'delete']
-    
+    http_method_names = ['get', 'put', 'patch', 'delete', 'post']
