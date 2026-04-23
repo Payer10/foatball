@@ -1,4 +1,4 @@
-from .models import PlayerWeekdetails, Match, News
+from .models import PlayerWeekdetails, Match, News, Season, Month
 from rest_framework import serializers
 
 
@@ -22,3 +22,21 @@ class NewsSerializer(serializers.ModelSerializer):
         model = News
         fields = ['id', 'title', 'content', 'created_at']
         # read_only_fields = ['id', 'title', 'content', 'created_at']
+
+
+
+class SeasonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Season
+        fields = ['id', 'player', 'season_year']
+        read_only_fields = ['id']
+
+
+
+class MonthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Month
+        fields = ['id', 'season', 'month_name']
+        read_only_fields = ['id']
+
+

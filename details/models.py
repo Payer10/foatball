@@ -6,7 +6,7 @@ from userauth.models import *
 # player season
 class Season(models.Model):
     player = models.ForeignKey(User,on_delete=models.CASCADE, related_name='season_model', null=True, blank=True)
-    season_year = models.CharField(max_length=20)
+    season_year = models.CharField(max_length=20,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -14,7 +14,7 @@ class Season(models.Model):
 # player season month
 class Month(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='months')
-    month_name = models.CharField(max_length=20)
+    month_name = models.CharField(max_length=20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -22,7 +22,7 @@ class Month(models.Model):
 # 1️⃣ Player Model (Leaderboard)
 class PlayerWeekdetails(models.Model):
     month = models.ForeignKey(Month, on_delete=models.CASCADE, related_name='player_weekdetails')
-    # short_name = models.CharField(max_length=50)
+    week_name = models.CharField(max_length=50, unique=True, null=True)
 
     # points = models.IntegerField(default=0)
     goal = models.IntegerField(default=0)
@@ -49,44 +49,56 @@ class PlayerWeekdetails(models.Model):
 
 
 # 2️⃣ Match Model (Schedule / Results)
-class Match(models.Model):
+    
+class PlayerMatch(models.Model):
     STATUS_CHOICES = [
         ("upcoming", "Upcoming"),
         ("live", "Live"),
         ("finished", "Finished"),
     ]
+    team_name = models.CharField(max_length=100)
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=100,choices=STATUS_CHOICES)
+    home_score = models.IntegerField(default=0, null=True)
+    away_score = models.IntegerField(default=0, null=True)
+    completion = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    team1 = models.CharField(max_length=200, null=True)
-    team2 = models.CharField(max_length=200, null=True)
 
-    team1_score = models.IntegerField(default=0)
-    team2_score = models.IntegerField(default=0)
 
-    time = models.TimeField(null=True)
+# 3️⃣ Match Model (Schedule / Results)
+class Match(models.Model):
+    player = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    match = models.ForeignKey(PlayerMatch, on_delete=models.CASCADE, null=True)
     date = models.DateField(null=True)
-
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, null=True)
-
-    score = models.CharField(max_length=20, blank=True, null=True)
-    result_type = models.CharField(max_length=50, blank=True, null=True)
-    result_label = models.CharField(max_length=50, blank=True, null=True)
+    goals = models.IntegerField(default=0)
+    goal_cancel = models.IntegerField(default=0)
+    notes = models.TextField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"{self.team1} vs {self.team2}"
+    
 
 
-# 3️⃣ News Model
+
+# 4 News Model
 class News(models.Model):
-    title = models.CharField(max_length=300)
-    description = models.TextField()
+    CHOICE_CATEGORY =  [
+        ("General", "General"),
+        ("Player", "Player"),
+        ("League", "League"),
+        ("Injury", "Injury"),
+        ("Transfer", "Transfer")
+    ]
+    image = models.URLField()
+    headline = models.CharField(max_length=300)
     content = models.TextField()
-
-    time = models.DateTimeField()
-    category = models.CharField(max_length=100)
-
+    date = models.DateTimeField()
+    category = models.CharField(max_length=100, choices=CHOICE_CATEGORY)
     hot = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)

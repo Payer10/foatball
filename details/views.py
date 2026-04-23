@@ -1,6 +1,6 @@
-from .models import PlayerWeekdetails, Match, News
+from .models import PlayerWeekdetails, Match, News, Season, Month
 
-from .serializers import PlayerRankingSerializer, MatchSerializer, NewsSerializer
+from .serializers import PlayerRankingSerializer, MatchSerializer, NewsSerializer, SeasonSerializer, MonthSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -248,3 +248,62 @@ class NewsListView(APIView):
 
         news.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+class SeasonListView(APIView):
+    permission_classes = [AllowAny and IsAuthenticated]
+    def get(self, request):
+        seasons = Season.objects.all().order_by('-season_year')
+        serializer = SeasonSerializer(seasons, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+    def post(self, request):
+        serializer = SeasonSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request):
+        data = request.data
+        pk = data.get('id')
+        try:
+            season = Season.objects.get(pk=pk)
+        except Season.DoesNotExist:
+            return Response({"detail": "Season not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        season.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+class MonthListView(APIView):
+    permission_classes = [AllowAny and IsAuthenticated]
+    def get(self, request):
+        months = Month.objects.all().order_by('-month_name')
+        serializer = MonthSerializer(months, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        serializer = MonthSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request):
+        data = request.data
+        pk = data.get('id')
+        try:
+            month = Month.objects.get(pk=pk)
+        except Month.DoesNotExist:
+            return Response({"detail": "Month not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        month.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+

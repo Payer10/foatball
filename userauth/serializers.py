@@ -27,9 +27,17 @@ class UserSerializerCURD(serializers.ModelSerializer):
             'username': {'required': False}
         }
 
+
     def create(self, validated_data):
+        username = validated_data.get('username')
+        
+        if not username:
+            raise serializers.ValidationError({
+                "username": "This field is required."
+            })
+
         user = User(
-            username=validated_data['username'],
+            username=username,
             email=validated_data.get('email')
         )
         user.set_password(validated_data['password'])
