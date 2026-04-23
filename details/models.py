@@ -94,7 +94,7 @@ class News(models.Model):
         ("Injury", "Injury"),
         ("Transfer", "Transfer")
     ]
-    image = models.URLField()
+    image = models.URLField(default="")
     headline = models.CharField(max_length=300)
     content = models.TextField()
     date = models.DateTimeField()
