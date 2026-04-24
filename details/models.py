@@ -3,7 +3,7 @@ from userauth.models import *
 
 # player season
 class Season(models.Model):
-    player = models.ForeignKey(User,on_delete=models.CASCADE, related_name='season_model', null=True, blank=True)
+    player = models.ForeignKey(User,on_delete=models.CASCADE, related_name='players', null=True, blank=True)
     season_year = models.CharField(max_length=20,unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -14,7 +14,7 @@ class Season(models.Model):
 
 # player season month
 class Month(models.Model):
-    season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='months')
+    season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='seasons')
     month_name = models.CharField(max_length=20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -25,7 +25,7 @@ class Month(models.Model):
 
 # 1️⃣ Player Model (Leaderboard)
 class PlayerWeekdetails(models.Model):
-    month = models.ForeignKey(Month, on_delete=models.CASCADE, related_name='player_weekdetails')
+    month = models.ForeignKey(Month, on_delete=models.CASCADE, related_name='months')
     week_name = models.CharField(max_length=50, unique=True, null=True)
     goal = models.IntegerField(default=0)
     matches = models.IntegerField(default=0)
