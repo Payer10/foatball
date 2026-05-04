@@ -75,20 +75,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foatball.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default':{
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'railway',
-#         'USER': 'postgres',
-#         'PASSWORD': 'MHiDNvgMdEveapoSaAdAEmnJmtlecHNj',
-#         'HOST': 'crossover.proxy.rlwy.net',
-#         'PORT': '45217',
-#     }
-# }
-
 
 # Add these at the top of your settings.py
 import os
