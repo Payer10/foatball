@@ -1,45 +1,126 @@
-from .models import User
+# from .models import User
+# from rest_framework import serializers
+
+
+# class UserSerializer(serializers.ModelSerializer):
+#     password = serializers.CharField(write_only=True)
+#     class Meta:
+#         model = User
+#         fields = ['id', 'username', 'email', 'image', 'password','jersey', 'position', 'tags']
+#         read_only_fields = ['id', 'image']
+
+#     def create(self, validated_data):
+#         password = validated_data.pop('password')
+#         user = User(**validated_data)
+#         user.set_password(password)
+#         user.save()
+#         return user
+
+
+# class UserSerializerCURD(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['id', 'username', 'email','password', 'image', 'jersey', 'position', 'tags']
+#         read_only_fields = ['id']
+#         extra_kwargs = {
+#             'password': {'write_only': True},
+#             'username': {'required': False}
+#         }
+
+
+#     def create(self, validated_data):
+#         username = validated_data.get('username')
+        
+#         if not username:
+#             raise serializers.ValidationError({
+#                 "username": "This field is required."
+#             })
+
+#         user = User(
+#             username=username,
+#             email=validated_data.get('email')
+#         )
+#         user.set_password(validated_data['password'])
+#         user.save()
+#         return user
+
+
+
+
+
 from rest_framework import serializers
+from .models import User
 
+class SignUpSerializer(serializers.ModelSerializer):
 
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password1 = serializers.CharField(write_only=True)
+    password2 = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'image', 'password','jersey', 'position', 'tags']
-        read_only_fields = ['id', 'image']
+        fields = [
+            'email',
+            'username',
+            'is_terms_service',
+            'password1',
+            'password2',
+        ]
+
+    def validate(self, attrs):
+        if attrs['password1'] != attrs['password2']:
+            raise serializers.ValidationError("Passwords do not match")
+
+        if not attrs.get('is_terms_service'):
+            raise serializers.ValidationError("You must agree to the terms of service")
+
+        return attrs
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = User(**validated_data)
+        password = validated_data.pop('password1')
+        validated_data.pop('password2')
+
+        user = User.objects.create(**validated_data)
         user.set_password(password)
         user.save()
         return user
 
 
-class UserSerializerCURD(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email','password', 'image', 'jersey', 'position', 'tags']
-        read_only_fields = ['id']
-        extra_kwargs = {
-            'password': {'write_only': True},
-            'username': {'required': False}
-        }
 
 
-    def create(self, validated_data):
-        username = validated_data.get('username')
+
+class SignInSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=False)
+    username = serializers.CharField(required=False)
+    password = serializers.CharField(write_only=True)
+    # phone_number = serializers.CharField(required=False)
+
+
+
+
+    def validate(self, data):
+        user = None
+        if data.get('email'):
+            user = User.objects.filter(email=data['email']).first()
+        if data.get('username'):
+            user = User.objects.filter(username=data['username']).first()
+
+        if not user or not user.check_password(data['password']):
+            raise serializers.ValidationError("Invalid credentials")
         
-        if not username:
-            raise serializers.ValidationError({
-                "username": "This field is required."
-            })
+        if not user.is_verified:
+            raise serializers.ValidationError("User is not verified")
+        
+        # if data.get('phone_number'):
+        #     user = User.objects.filter(phone_number=data['phone_number']).first()
 
-        user = User(
-            username=username,
-            email=validated_data.get('email')
-        )
-        user.set_password(validated_data['password'])
-        user.save()
+        
         return user
+
+
+class SignOutSerializer(serializers.Serializer):
+    user_id = serializers.UUIDField()
+
+
+
+class RefreshTokenSerializer(serializers.Serializer):
+    user_id = serializers.UUIDField()

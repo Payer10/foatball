@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from userauth.models import *
 
 # player season
@@ -66,7 +67,7 @@ class PlayerMatch(models.Model):
 
 # Match Model (Schedule / Results)
 class Match(models.Model):
-    player = models.ForeignKey(User, on_delete=models.CASCADE,related_name='match_player', null=True)
+    player = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='match_player', null=True)
     match = models.ForeignKey(PlayerMatch, on_delete=models.CASCADE,related_name='match_add', null=True)
     date = models.DateField(null=True)
     goals = models.IntegerField(default=0)
