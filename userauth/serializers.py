@@ -51,6 +51,7 @@
 from rest_framework import serializers
 from .models import User
 
+# -----------sign up serializer----------
 class SignUpSerializer(serializers.ModelSerializer):
 
     password1 = serializers.CharField(write_only=True)
@@ -85,9 +86,23 @@ class SignUpSerializer(serializers.ModelSerializer):
         return user
 
 
+# -----------update username serializer----------
+class UpdateUserNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["username"]
 
 
 
+# -----------user profile serializer----------
+class ProfileImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['profile_picture']
+
+
+
+# -----------sign in serializer----------
 class SignInSerializer(serializers.Serializer):
     email = serializers.EmailField(required=False)
     username = serializers.CharField(required=False)
@@ -117,10 +132,12 @@ class SignInSerializer(serializers.Serializer):
         return user
 
 
+
+# -----------sign out serializer----------
 class SignOutSerializer(serializers.Serializer):
     user_id = serializers.UUIDField()
 
 
-
+# -----------refresh token serializer----------
 class RefreshTokenSerializer(serializers.Serializer):
     user_id = serializers.UUIDField()

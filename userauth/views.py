@@ -76,7 +76,7 @@ import uuid
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 
 
-
+# ----------sign up view----------
 class SignupView(GenericAPIView):
     serializer_class = SignUpSerializer
 
@@ -106,6 +106,8 @@ class SignupView(GenericAPIView):
         return Response({"user_id": str(user.id)}, status=201)
 
 
+
+# ----------resend verification code view----------
 class ResendVerification(GenericAPIView):
     def post(self, request):
         user = User.objects.filter(id=request.data.get('user_id')).first()
@@ -132,6 +134,9 @@ class ResendVerification(GenericAPIView):
         return Response({'message': 'check your email and saw that a code went this email'},status=400)
 
 
+
+
+# ----------verify email view----------
 class VerifyEmailView(GenericAPIView):
 
     def post(self, request):
@@ -165,6 +170,9 @@ class VerifyEmailView(GenericAPIView):
         })
 
 
+
+
+# ----------sign in view----------
 class SignInViwe(GenericAPIView):
     serializer_class = SignInSerializer
 
@@ -188,6 +196,7 @@ class SignInViwe(GenericAPIView):
     
 
 
+# ----------sign out view----------
 class SignOutView(GenericAPIView):
     serializer_class = SignOutSerializer
 
@@ -209,6 +218,7 @@ class SignOutView(GenericAPIView):
 
 
 
+# ----------forgot password view----------
 class ForgotPasswordView(GenericAPIView):
     
     def post(self, request):
@@ -238,6 +248,9 @@ class ForgotPasswordView(GenericAPIView):
         })
         
 
+
+
+# ----------verification reset code view----------
 class VerificationResetCodeView(GenericAPIView):
 
     def post(self, request):
@@ -259,7 +272,11 @@ class VerificationResetCodeView(GenericAPIView):
         return Response({
             "secret_key": str(otp.secret_key)
         })
-    
+
+
+
+
+# ----------reset password view----------
 class ResetPasswordView(GenericAPIView):
 
     def post(self, request):
@@ -281,7 +298,7 @@ class ResetPasswordView(GenericAPIView):
     
 
 
-
+# ---------------refresh token view----------
 class RefreshTokenView(GenericAPIView):
     serializer_class = RefreshTokenSerializer
 

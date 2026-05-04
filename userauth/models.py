@@ -27,7 +27,7 @@ from django.utils import timezone
 import uuid
 
 
-
+# -----------custom user model----------
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
@@ -42,6 +42,7 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
     role = models.CharField(max_length=50, default='user')
+    updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(default=timezone.now)
 
 
@@ -52,6 +53,8 @@ class User(AbstractUser):
         return self.email
 
 
+
+# -----------verification code model----------
 class VarificationCode(models.Model):
     PURPOSE_CHOICES = [
         ('email_verification', 'Email Verification'),

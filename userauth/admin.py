@@ -10,6 +10,7 @@ from django.contrib import admin
 from .models import User, VarificationCode
 
 
+# -----------user admin----------
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):  
     list_display = ('email', 'is_active', 'is_verified', 'role', 'created_at')
@@ -18,6 +19,7 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
 
 
+# -----------verification code admin----------
 @admin.register(VarificationCode)
 class VarificationCodeAdmin(admin.ModelAdmin):
     list_display = ('user', 'code', 'purpose', 'created_at', 'expired_at')
